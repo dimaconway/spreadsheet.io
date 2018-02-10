@@ -1,0 +1,19 @@
+{
+  "name"   : "dimaconway/spreadsheet.api",
+  "type"   : "project",
+  "config": {
+    "platform": {
+      "php": "7.2"
+    }
+  },
+  "require": {
+    "google/apiclient"         : "^2.2",
+    "roave/security-advisories": "dev-master"
+  },
+  "authors": [
+    {
+      "name" : "dimaconway",
+      "email": "dimaconway@gmail.com"
+    }
+  ]
+}
