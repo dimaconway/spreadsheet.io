@@ -1,4 +1,5 @@
-To run this project you need to create project in the Google Developers Console, get a credentials json from it and put .json file on this project root. How to do it is described [here at Step 1](https://developers.google.com/sheets/api/quickstart/php#step_1_turn_on_the_api_name).
+To run this project you need to create project in the Google Developers Console, download a `client_secret.json` from it and put `client_secret.json` file to this project root.  
+How to do it is described [here at "Create authorization credentials" section](https://developers.google.com/api-client-library/php/auth/web-app#creatingcred).
 
 
 Free limits of **Google Sheets API**

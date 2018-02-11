@@ -1,5 +1,11 @@
 .idea
 vendor
 
-client_secret.json
+client_secret*.json
 credentials
+
+/logs/*
+
+
+
+!.gitkeep

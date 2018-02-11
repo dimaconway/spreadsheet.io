@@ -8,7 +8,8 @@
   },
   "require": {
     "google/apiclient"         : "^2.2",
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-master",
+    "monolog/monolog": "^1.23"
   },
   "authors": [
     {
