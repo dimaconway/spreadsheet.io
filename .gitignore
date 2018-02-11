@@ -2,10 +2,7 @@
 vendor
 
 client_secret*.json
-credentials
-
+/credentials/*
 /logs/*
-
-
 
 !.gitkeep
