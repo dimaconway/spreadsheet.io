@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 /**
+ * Create instance of Google_Client and set required parameters.
+ *
  * @return Google_Client
  * @throws Google_Exception
  */
@@ -13,17 +15,19 @@ function initGoogleClient()
     ];
     $urlToOAuth2callback = 'http://' . $_SERVER['HTTP_HOST'] . '/oauth2callback.php';
 
-    $client = new Google_Client();
-    $client->setAuthConfig($pathToClientSecretJson);
-    $client->setAccessType('offline');
-    $client->addScope($arScopes);
-    $client->setRedirectUri($urlToOAuth2callback);
+    $googleClient = new Google_Client();
+    $googleClient->setAuthConfig($pathToClientSecretJson);
+    $googleClient->setAccessType('offline');
+    $googleClient->addScope($arScopes);
+    $googleClient->setRedirectUri($urlToOAuth2callback);
 
-    return $client;
+    return $googleClient;
 }
 
 /**
- * @return \Monolog\Logger
+ * Initiate Logger
+ *
+ * @return \Psr\Log\LoggerInterface
  * @throws Exception
  */
 function initLogger()
@@ -49,7 +53,6 @@ function initLogger()
     $logger->pushProcessor(new \Monolog\Processor\PsrLogMessageProcessor);
     $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor);
     $logger->pushProcessor(new \Monolog\Processor\TagProcessor([
-        'session_id' => session_id(),
         'login' => $login,
     ]));
     $logger->pushProcessor(new \Monolog\Processor\WebProcessor);
@@ -59,14 +62,26 @@ function initLogger()
 }
 
 /**
- * @param string        $login
- * @param Google_Client $googleClient
+ * Read previously saved Access Token. If there is no Access Token - redirect to
+ * /oauth2callback.php for getting a new Access Token from Google.
+ *
+ * If Access Token expired - try to refresh it with Refresh Token.
+ *
+ * If there is no Refresh Token - redirect to /oauth2callback.php
+ * for getting a new Access Token from Google.
+ *
+ * Save Access Token when you got one.
+ *
+ * @param string        $login        User login. Needed only as a name of the
+ *                                    .json file with Access Token
+ * @param Google_Client $googleClient Instance of Google_Client where to put
+ *                                    Access Token
  */
 function initAccessToken(string $login, Google_Client $googleClient)
 {
     global $logger;
 
-    $accessToken = loadAccessToken($login);
+    $accessToken = readAccessToken($login);
 
     if (!$accessToken) {
         $redirectUri = 'http://' . $_SERVER['HTTP_HOST'] . '/oauth2callback.php';
@@ -92,7 +107,7 @@ function initAccessToken(string $login, Google_Client $googleClient)
         $logger->info('Refreshing with refresh token', ['refresh_token' => var_export($refreshToken, true)]);
 
         $googleClient->fetchAccessTokenWithRefreshToken($refreshToken);
-        saveAccessToken($login, $googleClient->getAccessToken());
+        writeAccessToken($login, $googleClient->getAccessToken());
         $logger->info('New access token', ['access_token' => var_export($googleClient->getAccessToken(), true)]);
     } else {
         $logger->info('Access token is not expired',
@@ -100,6 +115,9 @@ function initAccessToken(string $login, Google_Client $googleClient)
     }
 }
 
+/**
+ * Main function
+ */
 function run()
 {
     global $googleClient;
@@ -137,10 +155,13 @@ function run()
 }
 
 /**
- * @param string $login
+ * Save Access Token to .json file
+ *
+ * @param string $login User login. Needed only as a name of the .json file
+ *                      with Access Token
  * @param array  $accessToken
  */
-function saveAccessToken(string $login, array $accessToken)
+function writeAccessToken(string $login, array $accessToken)
 {
     global $login;
     file_put_contents(
@@ -150,11 +171,14 @@ function saveAccessToken(string $login, array $accessToken)
 }
 
 /**
- * @param string $login
+ * Load Access Token from .json file
+ *
+ * @param string $login User login. Needed only as a name of the .json file
+ *                      with Access Token
  *
  * @return array
  */
-function loadAccessToken(string $login): array
+function readAccessToken(string $login): array
 {
     $token = file_get_contents(CREDENTIALS_DIR . '/' . $login . '.json');
 

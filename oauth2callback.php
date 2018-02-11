@@ -11,8 +11,9 @@ try {
         $logger->info('Got authCode', ['auth_code' => $_GET['code']]);
 
         $googleClient->fetchAccessTokenWithAuthCode($_GET['code']);
-        saveAccessToken($login, $googleClient->getAccessToken());
-        $logger->info('Access token from authCode', ['access_token' => var_export($googleClient->getAccessToken(), true)]);
+        writeAccessToken($login, $googleClient->getAccessToken());
+        $logger->info('Access token from authCode',
+            ['access_token' => var_export($googleClient->getAccessToken(), true)]);
 
         $redirectUri = 'http://' . $_SERVER['HTTP_HOST'] . '/';
         header('Location: ' . filter_var($redirectUri, FILTER_SANITIZE_URL));
