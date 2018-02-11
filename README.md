@@ -1,9 +1,13 @@
-To run this project you need to create project in the Google Developers Console, download a `client_secret.json` from it and put `client_secret.json` file to this project root.  
-How to do it is described [here at "Create authorization credentials" section](https://developers.google.com/api-client-library/php/auth/web-app#creatingcred).
+#####How to run
+1. Create project in the Google Developers Console: follow list items a-d from the section "Step 1: Turn on the Google Sheets API"
+[in this instruction](https://developers.google.com/sheets/api/quickstart/php#step_1_turn_on_the_api_name).
+1. [Follow instructions in section "Create authorization credentials"](https://developers.google.com/api-client-library/php/auth/web-app#creatingcred). 
+create credentials, download `client_secret.json` and put
+`client_secret.json` into this project root.
+1. Give web-server (e.g. Apache) writing rights on `/credentials/` and `/logs/` directories inside project.
 
 
 Free limits of **Google Sheets API**
-
 Action | Limit
 --- | ---
 **Read** requests per 100 seconds | 500
