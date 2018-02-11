@@ -9,18 +9,19 @@ if (empty($_SESSION['ACCESS_TOKEN'])) {
     $redirectUri = 'http://' . $_SERVER['HTTP_HOST'] . '/oauth2callback.php';
     $logger->info('No access token. Redirecting to {redirect_uri}', ['redirect_uri' => $redirectUri]);
     header('Location: ' . filter_var($redirectUri, FILTER_SANITIZE_URL));
-} else {
-    $googleClient->setAccessToken($_SESSION['ACCESS_TOKEN']);
-    if ($googleClient->isAccessTokenExpired()) {
-        $logger->info('Access token expired {access_token}', [
-            'access_token' => var_export($googleClient->getAccessToken(), true),
-        ]);
-        $googleClient->fetchAccessTokenWithRefreshToken($googleClient->getRefreshToken());
-        $_SESSION['ACCESS_TOKEN'] = $googleClient->getAccessToken();
-        $logger->info('New access token {access_token}', [
-            'access_token' => var_export($googleClient->getAccessToken(), true),
-        ]);
-    }
+    die;
+}
+
+$googleClient->setAccessToken($_SESSION['ACCESS_TOKEN']);
+if ($googleClient->isAccessTokenExpired()) {
+    $logger->info('Access token expired {access_token}', [
+        'access_token' => var_export($googleClient->getAccessToken(), true),
+    ]);
+    $googleClient->fetchAccessTokenWithRefreshToken($googleClient->getRefreshToken());
+    $_SESSION['ACCESS_TOKEN'] = $googleClient->getAccessToken();
+    $logger->info('New access token {access_token}', [
+        'access_token' => var_export($googleClient->getAccessToken(), true),
+    ]);
 }
 
 $sheetsService = new Google_Service_Sheets($googleClient);
@@ -43,3 +44,11 @@ if (count($values) === 0) {
     }
 }
 echo '</pre>';
+
+
+$newSpreadsheet = new Google_Service_Sheets_Spreadsheet();
+$newSpreadsheet->setProperties(new Google_Service_Sheets_SpreadsheetProperties([
+    'title' => 'spreadsheet.io',
+]));
+$response = $sheetsService->spreadsheets->create($newSpreadsheet);
+echo '<pre>', var_export($response, true), '</pre>', "\n";
