@@ -28,6 +28,8 @@ function initGoogleClient()
  */
 function initLogger()
 {
+    global $login;
+
     $logDir = $_SERVER['DOCUMENT_ROOT'] . '/logs';
 
     $logstashFormatter = new \Monolog\Formatter\LogstashFormatter('spreadsheet.io');
@@ -48,6 +50,7 @@ function initLogger()
     $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor);
     $logger->pushProcessor(new \Monolog\Processor\TagProcessor([
         'session_id' => session_id(),
+        'login' => $login,
     ]));
     $logger->pushProcessor(new \Monolog\Processor\WebProcessor);
     \Monolog\Registry::addLogger($logger);

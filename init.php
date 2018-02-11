@@ -1,12 +1,14 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__.'/functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/functions.php';
 
-define('CREDENTIALS_DIR', __DIR__ . '/credentials');
+define('CREDENTIALS_DIR', $_SERVER['DOCUMENT_ROOT'] . '/credentials');
 
 session_start();
 
+$login = trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/login.txt')) ?? 'default_login';
+
 $googleClient = initGoogleClient();
 $logger = initLogger();
-$login = $_GET['login'] ?? 'default_login';
+
