@@ -1,9 +1,9 @@
 ### How to run
 1. **Create project in the Google Developers Console.** Follow list items `a-d` from the section [Step 1: Turn on the Google Sheets API](https://developers.google.com/sheets/api/quickstart/php#step_1_turn_on_the_api_name).
 1. **Get `client_secret.json`.** Follow instructions in section ["Create authorization credentials"](https://developers.google.com/api-client-library/php/auth/web-app#creatingcred): 
-   * create credentials,
-   * download `client_secret.json`
-   * put `client_secret.json` into this project root.
+   * Create credentials. In field `Authorized redirect URIs` enter `http://<your_domain>/oauth2callback.php`),
+   * Download `client_secret.json`
+   * Put `client_secret.json` into this project root.
 1. **Give web-server** (e.g. Apache) **writing rights
 on `/credentials/` and `/logs/` directories inside the project.**
 
